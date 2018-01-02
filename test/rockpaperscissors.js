@@ -26,8 +26,8 @@ contract('RockPaperScissors', function(accounts) {
 
     it("should give refunds when player1 and player2 play ROCK ", function () {
         return RockPaperScissors.deployed().then(function(instance) {
-            return instance.play.call(player1, player2, 1, 1, bid);
-        }).then(function(bloop) {
+            return instance.play.call(player1, player2, 0, 0, bid);
+        }).then(function() {
             assert.equal(player1StartingBalance,  web3.eth.getBalance(player1));
         });
     });
