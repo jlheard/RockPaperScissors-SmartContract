@@ -1,7 +1,7 @@
 var RockPaperScissors = artifacts.require("RockPaperScissors");
 
 contract('RockPaperScissors', function(accounts) {
-    var bid = web3.toBigNumber(10);
+    var bet = web3.toWei(1, "ether");
     var player1 = accounts[1];
     var player2 = accounts[2];
     var player1StartingBalance = web3.eth.getBalance(player1).toNumber();
@@ -12,7 +12,7 @@ contract('RockPaperScissors', function(accounts) {
         return RockPaperScissors.deployed().then(function(instance) {
             return instance.getBalance.call(player1);
         }).then(function(player1Balance) {
-            assert.equal(player1StartingBalance, player1Balance.toNumber());
+            assert.equal(player1Balance.toNumber(), player1StartingBalance);
         });
     });
 
@@ -20,15 +20,20 @@ contract('RockPaperScissors', function(accounts) {
         return RockPaperScissors.deployed().then(function(instance) {
             return instance.getBalance.call(player2);
         }).then(function(player2Balance) {
-            assert.equal(player2StartingBalance, player2Balance.toNumber());
+            assert.equal(player2Balance.toNumber(), player2StartingBalance);
         });
     });
 
-    it("should give refunds when player1 and player2 play ROCK ", function () {
+    it("should add the first caller of addPlayer as player1", function() {
+        var rps;
         return RockPaperScissors.deployed().then(function(instance) {
-            return instance.play.call(player1, player2, 0, 0, bid);
+            rps = instance;
+            return rps.addPlayer.call({from: player1});
         }).then(function() {
-            assert.equal(player1StartingBalance,  web3.eth.getBalance(player1));
+            return rps.player1.call();
+        }).then(function(_player1) {
+            assert.equal(_player1, player1)
         });
     });
+
 });
