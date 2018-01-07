@@ -34,7 +34,7 @@ contract RockPaperScissors {
             if(player1 == address(0)) {
                 player1 = msg.sender;
                 Player1Added(player1);
-            } else if (player1 != address(0) && player2 == address(0)) {
+            } else if (player2 == address(0)) {
                 player2 = msg.sender;
                 Player2Added(player2);
                 gameFull = true;
