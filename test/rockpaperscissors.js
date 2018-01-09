@@ -289,4 +289,23 @@ contract('RockPaperScissors', function(accounts) {
         });
     });
 
+    it("should reject adding a third player and gives refund", function() {
+        var rps;
+        var extraPlayer = accounts[3];
+        var startingBalance = web3.eth.getBalance(extraPlayer).toNumber();
+        return RockPaperScissors.deployed().then(function(instance) {
+            rps = instance;
+            return rps.addPlayer.sendTransaction({from: extraPlayer});
+        }).then(function() {
+            assert.equal(web3.eth.getBalance(extraPlayer).toNumber(), startingBalance);
+            return rps.player1.call();
+        }).then(function(_player1) {
+            assert.notEqual(_player1, extraPlayer);
+        }).then(function() {
+            return rps.player2.call();
+        }).then(function(_player2) {
+            assert.notEqual(_player2, extraPlayer);
+        });
+    });
+
 });
